@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.task.mapper.TaskPoolInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.task.model.entity.TaskPoolInfo">
+            <result property="id" column="id" jdbcType="BIGINT"/>
+            <result property="projectId" column="project_id" jdbcType="BIGINT"/>
+            <result property="dataId" column="data_id" jdbcType="BIGINT"/>
+            <result property="status" column="status" jdbcType="SMALLINT"/>
+            <result property="taskId" column="task_id" jdbcType="BIGINT"/>
+            <result property="datasetId" column="dataset_id" jdbcType="BIGINT"/>
+            <result property="priority" column="priority" jdbcType="SMALLINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
+            <result property="memo" column="memo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,project_id,data_id,
+        status,task_id,dataset_id,
+        priority,create_time,update_time,
+        create_by,update_by,memo
+    </sql>
+
+    <!-- 按优先级排序（0 高，1 中，2 低），选择status=0的一个任务  -->
+    <select id="getOneTaskByProjectIdAndStatus" resultType="com.hdmap.task.model.entity.TaskPoolInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM task_pool_info
+        WHERE project_id = #{id}
+        AND status = #{status}
+        ORDER BY priority
+        LIMIT #{limit}
+    </select>
+
+    <delete id="deleteBatchByProjectIdAndDatasetIdsAndStatus">
+        delete from task_pool_info
+        where project_id = #{projectId}
+        and dataset_id in
+        <foreach collection="datasetIds" item="datasetId" open="(" separator="," close=")">
+            #{datasetId}
+        </foreach>
+        and status = #{status}
+    </delete>
+
+
+</mapper>

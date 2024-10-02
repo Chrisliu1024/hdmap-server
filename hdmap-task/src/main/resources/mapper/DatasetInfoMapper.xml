@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.task.mapper.DatasetInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.task.model.entity.DatasetInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="SMALLINT"/>
+            <result property="status" column="status" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
+            <result property="memo" column="memo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,type,
+        status,create_time,update_time,
+        create_by,update_by,memo
+    </sql>
+
+    <!-- 通过关联表查询 project_id -> 关联表（projects_datasets_rel）-> dataset_id -> dataset_info(List) -->
+    <select id="getListByProjectId" resultType="com.hdmap.task.model.entity.DatasetInfo" resultMap="BaseResultMap">
+        select di.* from dataset_info di
+                             left join projects_datasets_rel pdr
+                                       on di.id = pdr.dataset_id
+        where pdr.project_id = #{id}
+    </select>
+
+    <select id="page" resultType="com.hdmap.task.model.entity.DatasetInfo">
+        select
+            <include refid="Base_Column_List"/>
+        from dataset_info
+        <where>
+            <if test="info.id != null">
+                and id = #{info.id}
+            </if>
+            <if test="info.name != null and info.name != ''">
+                and name like concat('%', #{info.name}::text, '%')
+            </if>
+            <if test="info.type != null">
+                and type = #{info.type}
+            </if>
+            <if test="info.status != null">
+                and status = #{info.status}
+            </if>
+            <if test="info.createTime != null">
+                and create_time = #{info.createTime}
+            </if>
+            <if test="info.updateTime != null">
+                and update_time = #{info.updateTime}
+            </if>
+            <if test="info.createBy != null">
+                and create_by = #{info.createBy}
+            </if>
+            <if test="info.updateBy != null">
+                and update_by = #{info.updateBy}
+            </if>
+            <if test="info.memo != null and info.memo != ''">
+                and memo like concat('%', #{info.memo}::text, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

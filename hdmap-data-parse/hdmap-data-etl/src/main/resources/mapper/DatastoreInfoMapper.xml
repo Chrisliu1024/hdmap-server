@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.data.etl.mapper.DatastoreInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.data.etl.model.entity.DatastoreInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="SMALLINT"/>
+            <result property="connectionParams" column="connection_params" jdbcType="OTHER" typeHandler="com.hdmap.mybatis.config.JsonTypeHandler"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap-DatastoreAndLeft" type="com.hdmap.data.etl.model.dto.DatastoreAndLeft">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="SMALLINT"/>
+        <result property="connectionParams" column="connection_params" jdbcType="OTHER" typeHandler="com.hdmap.mybatis.config.JsonTypeHandler"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="left" column="left" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,type,
+        connection_params,description
+    </sql>
+    <!--  通过关联表pipeline_datastore_rel查询, 利用datastore_info全部字段和pipeline_datastore_rel.left生成DatastoreAndLeft  -->
+    <select id="getByPipelineId" resultMap="BaseResultMap-DatastoreAndLeft">
+        SELECT
+        ds.id, ds.name, ds.type, ds.connection_params, ds.description, rel.left
+        FROM datastore_info ds
+        LEFT JOIN pipeline_datastore_rel rel
+        ON ds.id = rel.datastore_id
+        WHERE rel.pipeline_id = #{id}
+    </select>
+</mapper>

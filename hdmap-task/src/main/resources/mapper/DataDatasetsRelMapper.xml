@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.task.mapper.DataDatasetsRelMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.task.model.entity.DataDatasetsRel">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="dataId" column="data_id" jdbcType="BIGINT"/>
+            <result property="datasetId" column="dataset_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,data_id,dataset_id
+    </sql>
+
+    <update id="updateDatasetIdByDatasetIdAndDataId">
+        update data_datasets_rel
+        set dataset_id = #{newDatasetId}
+        where dataset_id = #{datasetId} and data_id = #{dataId}
+    </update>
+
+    <delete id="deleteByDataIds">
+        delete from data_datasets_rel
+        where data_id in
+        <foreach collection="dataIds" item="dataId" open="(" close=")" separator=",">
+            #{dataId}
+        </foreach>
+    </delete>
+
+    <select id="selectByDatasetId" resultType="com.hdmap.task.model.entity.DataDatasetsRel">
+        select
+        <include refid="Base_Column_List"/>
+        from data_datasets_rel
+        where dataset_id = #{datasetId}
+    </select>
+</mapper>

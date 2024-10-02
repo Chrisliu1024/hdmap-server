@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.data.ibd.mapper.IbdTableMappingMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.data.ibd.entity.IbdTableMapping">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="sourceTableName" column="source_table_name" jdbcType="VARCHAR"/>
+            <result property="targetTableName" column="target_table_name" jdbcType="VARCHAR"/>
+            <result property="tableMappingJson" column="table_mapping_json" jdbcType="OTHER"/>
+            <result property="prorityLevel" column="prority_level" jdbcType="OTHER"/>
+            <result property="isUseable" column="is_useable" jdbcType="BOOLEAN"/>
+            <result property="version" column="version" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,source_table_name,target_table_name,
+        table_mapping_json,prority_level,is_useable,
+        version
+    </sql>
+</mapper>

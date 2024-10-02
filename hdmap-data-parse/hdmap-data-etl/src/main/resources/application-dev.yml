@@ -1,0 +1,125 @@
+dbconfig:
+  host: 10.70.28.43
+  port: 5432
+  database: ruqi_map_dev
+  schema: db
+  username: postgres
+  password: hdmap
+
+server:
+  tomcat:
+    max-threads: 400
+    max-connections: 20000
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  servlet:
+    multipart:
+      max-file-size: 100MB    # 设置单个文件最大大小为100MB
+      max-request-size: 200MB    # 设置多个文件大小为200MB
+  datasource:
+    url: jdbc:postgresql://${dbconfig.host}:${dbconfig.port}/${dbconfig.database}?useUnicode=true&characterEncoding=utf8&currentSchema=${dbconfig.schema}&stringtype=unspecified
+    username: ${dbconfig.username}
+    password: ${dbconfig.password}
+    driver-class-name: org.postgresql.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initialSize: 10
+      maxActive: 20
+      minIdle: 5
+      maxWait: 1000
+      minEvictableIdleTimeMillis: 300000
+      useGlobalDataSourceStat: true
+      timeBetweenEvictionRunsMillis: 60000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: true
+      testOnReturn: true
+  redis:
+    redisson:
+      config: |
+        singleServerConfig:
+          password: hdmap
+          address: "redis://10.70.28.43:6379"
+          database: 1
+        threads: 16
+        nettyThreads: 32
+        codec: !<org.redisson.codec.FstCodec> {}
+        transportMode: "NIO"
+#  redis:
+#    host: 10.70.28.43
+#    port: 6379
+#    timeout: 20s
+#    password: hdmap
+#    database: 0
+#    jedis:
+#      pool:
+#        max-active: 8
+#        min-idle: 0
+#        max-idle: 8
+#        max-wait: -1ms
+
+#mybatis-plus:
+#  configuration:
+#    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl # 默认输出到日志文件
+#    logImpl: org.apache.ibatis.logging.stdout.StdOutImpl #默认输出到控制台
+#  mapper-locations: classpath*:mapper/*.xml
+  #type-handlers-package: com.hdmap.file.admin.util
+#dubbo:
+#  application:
+#    logger: slf4j
+#    # 元数据中心 local 本地 remote 远程 这里使用远程便于其他服务获取
+#    # 注意 这里不能使用 本地 local 会读取不到元数据
+#    metadataType: remote
+#    # 可选值 interface、instance、all，默认是 all，即接口级地址、应用级地址都注册
+#    register-mode: instance
+#    service-discovery:
+#      # FORCE_INTERFACE，只消费接口级地址，如无地址则报错，单订阅 2.x 地址
+#      # APPLICATION_FIRST，智能决策接口级/应用级地址，双订阅
+#      # FORCE_APPLICATION，只消费应用级地址，如无地址则报错，单订阅 3.x 地址
+#      migration: FORCE_APPLICATION
+#  protocol:
+#    # 设置为 tri 即可使用 Triple 3.0 新协议
+#    # 性能对比 dubbo 协议并没有提升 但基于 http2 用于多语言异构等 http 交互场景
+#    # 使用 dubbo 协议通信
+#    name: dubbo
+#    # dubbo 协议端口(-1表示自增端口,从20880开始)
+#    port: -1
+#  # 注册中心配置
+#  registry:
+#    address: nacos://10.70.28.43:8848
+#    # 这里注意 由于 3.X 的 bug 导致注册组不生效
+#    group: DUBBO_GROUP
+#    # 由于 group 不生效 这里使用 namespace 将 dubbo 服务与 cloud 服务隔离
+#    # 否则会导致正常请求路由到 dubbo 服务报错
+#    parameters:
+#      # 注意 这里要在 nacos 创建 namespace 环境
+#      namespace: e8a46ba3-b143-484d-8607-272cf4f1894d
+#      username: nacos
+#      password: hdmap2024
+#  # 消费者相关配置
+#  consumer:
+#    # 支持校验注解
+#    validation: true
+#    # 超时时间
+#    timeout: 30000
+#    # 初始化检查
+#    check: false
+#  provider:
+#    timeout: 90000
+#  scan:
+#    # 接口实现类扫描
+#    base-packages: com.hdmap.**.dubbo
+
+minio:
+  url: http://10.70.28.43:9000
+  accesskey: EAMSDNvcB3eY3VARmsdP
+  secretkey: OFP7LLXJb5rM9oDw19KvpjkWlhTI5NOEaGFw9q4d
+  bucket: ibd-parse
+
+knife4j:
+  enable: true
+

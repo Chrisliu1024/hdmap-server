@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.task.mapper.ProjectsUsersRelMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.task.model.entity.ProjectsUsersRel">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="projectId" column="project_id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="role" column="role" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,project_id,user_id,
+        role
+    </sql>
+
+    <!-- 通过关联表查询 project_id -> 关联表（projects_users_rel）-> user -->
+    <select id="selectUserShortInfosByProjectId" resultType="com.hdmap.task.model.dto.UserShortInfo">
+        select pur.user_id as id, pur.role from projects_users_rel pur
+        where project_id = #{id}
+    </select>
+
+    <select id="selectUserShortInfosByProjectIdAndRole" resultType="com.hdmap.task.model.dto.UserShortInfo">
+        select pur.user_id as id, pur.role from projects_users_rel pur
+        where project_id = #{id}
+          and role = #{role}
+    </select>
+
+    <delete id="deleteBatchByProjectIdAndUserIds">
+        delete from projects_users_rel
+        where project_id = #{projectId}
+        and user_id in
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+</mapper>

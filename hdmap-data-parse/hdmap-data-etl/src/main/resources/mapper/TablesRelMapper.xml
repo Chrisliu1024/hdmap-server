@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.data.etl.mapper.TablesRelMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.data.etl.model.entity.TablesRel">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="leftTableId" column="left_table_id" jdbcType="BIGINT"/>
+            <result property="rightTableId" column="right_table_id" jdbcType="BIGINT"/>
+            <result property="leftFieldId" column="left_field_id" jdbcType="BIGINT"/>
+            <result property="rightFieldId" column="right_field_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,left_table_id,right_table_id,
+        left_field_id,right_field_id
+    </sql>
+</mapper>

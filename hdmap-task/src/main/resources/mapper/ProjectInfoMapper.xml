@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.task.mapper.ProjectInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.task.model.entity.ProjectInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="SMALLINT"/>
+            <result property="type" column="type" jdbcType="SMALLINT"/>
+            <result property="owner" column="owner" jdbcType="BIGINT"/>
+            <result property="estimateWorkload" column="estimate_workload" jdbcType="REAL"/>
+            <result property="priority" column="priority" jdbcType="SMALLINT"/>
+            <result property="planStartTime" column="plan_start_time" jdbcType="TIMESTAMP"/>
+            <result property="actualStartTime" column="actual_start_time" jdbcType="TIMESTAMP"/>
+            <result property="planEndTime" column="plan_end_time" jdbcType="TIMESTAMP"/>
+            <result property="actualEndTime" column="actual_end_time" jdbcType="TIMESTAMP"/>
+            <result property="geom" column="geom" jdbcType="OTHER" typeHandler="com.hdmap.mybatis.config.GeometryTypeHandler"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
+            <result property="memo" column="memo" jdbcType="VARCHAR"/>
+            <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,status,
+        type,owner,estimate_workload,
+        priority,plan_start_time,actual_start_time,
+        plan_end_time,actual_end_time,geom,
+        create_time,update_time,create_by,
+        update_by,memo,parent_id
+    </sql>
+
+    <!-- 通过关联表查询 task_set_id -> 关联表（projects_task_sets_rel）-> project_id -> project_info -->
+    <select id="selectOneByTaskSetId" resultType="com.hdmap.task.model.entity.ProjectInfo">
+        select pi.* from project_info pi
+                             left join projects_task_sets_rel ptsr
+                                       on pi.id = ptsr.project_id
+        where ptsr.task_set_id = #{id}
+    </select>
+
+    <select id="selectPageByProjectsUsersRel" resultType="com.hdmap.task.model.entity.ProjectInfo">
+        select pi.* from project_info pi
+                             left join projects_users_rel pur
+                                       on pi.id = pur.project_id
+        <where>
+            <if test="projectsUsersRel.projectId != null">
+                and pur.project_id = #{projectsUsersRel.projectId}
+            </if>
+            <if test="projectsUsersRel.userId != null">
+                and pur.user_id = #{projectsUsersRel.userId}
+            </if>
+            <if test="projectsUsersRel.role != null">
+                and pur.role = #{projectsUsersRel.role}
+            </if>
+        </where>
+    </select>
+
+</mapper>

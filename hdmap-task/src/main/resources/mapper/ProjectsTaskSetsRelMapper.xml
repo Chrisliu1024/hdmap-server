@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.task.mapper.ProjectsTaskSetsRelMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.task.model.entity.ProjectsTaskSetsRel">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="projectId" column="project_id" jdbcType="BIGINT"/>
+            <result property="taskSetId" column="task_set_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,project_id,task_set_id
+    </sql>
+
+    <delete id="deleteBatchByProjectIdAndTaskSetIds">
+        delete from projects_task_sets_rel
+        where project_id = #{projectId}
+        and task_set_id in
+        <foreach collection="taskSetIds" item="taskSetId" open="(" separator="," close=")">
+            #{taskSetId}
+        </foreach>
+    </delete>
+</mapper>

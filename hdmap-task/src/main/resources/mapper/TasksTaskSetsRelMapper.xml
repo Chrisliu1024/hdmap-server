@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.task.mapper.TasksTaskSetsRelMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.task.model.entity.TasksTaskSetsRel">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="taskId" column="task_id" jdbcType="BIGINT"/>
+            <result property="taskSetId" column="task_set_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,task_id,task_set_id
+    </sql>
+</mapper>

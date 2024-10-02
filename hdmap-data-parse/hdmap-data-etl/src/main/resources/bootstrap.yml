@@ -1,0 +1,51 @@
+# Tomcat
+server:
+  port: 38421
+
+# Spring
+spring: 
+  application:
+    # 应用名称
+    name: hdmap-data-etl-service
+  # 选择激活的配置文件
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      # 服务注册地址
+      server-addr: 10.70.28.43:8848
+      # 注册组
+      discovery:
+        # prod环境
+        #namespace: f4680617-4bb7-4e0e-8da8-2b50f17bf5ec
+        # dev环境
+        namespace: e7447ceb-311e-4d28-baa0-719b3a388f26
+        group: hdmap-aggregation
+        username: nacos
+        password: hdmap2024
+      # 配置组
+      config:
+        # prod环境
+        #namespace: f4680617-4bb7-4e0e-8da8-2b50f17bf5ec
+        # dev环境
+        namespace: e7447ceb-311e-4d28-baa0-719b3a388f26
+        group: hdmap-aggregation
+        username: nacos
+        password: hdmap2024
+        file-extension: yml  #指定配置文件的扩展名，配置文件名称根据application.name的名称加扩展名拼装，为ruqi-hdmap-gateway-service.yaml
+        enabled: false
+#    sentinel:
+#      # 取消控制台懒加载
+#      eager: true
+#      transport:
+#        # 控制台地址
+#        dashboard: 127.0.0.1:8718
+#        server-addr: nacos-test.ruqimobility.com:80
+#        namespace: namespace-test
+#        group: travel-test
+#        enabled: true
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

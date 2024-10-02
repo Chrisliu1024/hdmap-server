@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.data.etl.mapper.PipelineDatastoreRelMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.data.etl.model.entity.PipelineDatastoreRel">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="pipelineId" column="pipeline_id" jdbcType="BIGINT"/>
+            <result property="datastoreId" column="datastore_id" jdbcType="BIGINT"/>
+            <result property="left" column="left" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,pipeline_id,datastore_id,
+        left
+    </sql>
+</mapper>

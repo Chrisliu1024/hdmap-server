@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.task.mapper.DataInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.task.model.entity.DataInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="SMALLINT"/>
+            <result property="status" column="status" jdbcType="BIGINT"/>
+            <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
+            <result property="location" column="location" jdbcType="VARCHAR"/>
+            <result property="geom" column="geom" jdbcType="OTHER" typeHandler="com.hdmap.mybatis.config.GeometryTypeHandler"/>
+            <result property="geohash" column="geohash" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
+            <result property="memo" column="memo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,type,
+        status,file_name,location,
+        geom,geohash,create_time,
+        update_time,create_by,update_by,
+        memo
+    </sql>
+
+    <!-- 通过关联表查询 dataset_id -> 关联表（data_datasets_rel）-> data_id -> data_info(List) -->
+    <select id="selectByDataSetId" resultMap="BaseResultMap">
+        select di.* from data_info di
+                             left join data_datasets_rel ddr
+                                       on di.id = ddr.data_id
+        where ddr.dataset_id = #{id}
+    </select>
+
+    <!-- 通过关联表查询 project_id -> 关联表（projects_datasets_rel）-> dataset_id -> 关联表（data_datasets_rel）-> data_id -> data_info(List) -->
+    <select id="selectByProjectId" resultMap="BaseResultMap">
+        select di.* from data_info di
+                             left join data_datasets_rel ddr
+                                       on di.id = ddr.data_id
+                             left join projects_datasets_rel pdr
+                                       on ddr.dataset_id = pdr.dataset_id
+        where pdr.project_id = #{id}
+    </select>
+
+    <select id="selectByDataSetIdAndGeohashAndType" resultMap="BaseResultMap">
+        select di.* from data_info di
+                             left join data_datasets_rel ddr
+                                       on di.id = ddr.data_id
+        where ddr.dataset_id = #{id}
+        and di.geohash = #{geohash}
+        and di.type = #{type}
+    </select>
+
+    <select id="selectResultDataInfoByTaskId" resultMap="BaseResultMap">
+        select di.* from data_info di
+                             left join task_ibd_data_rel tdr
+                                       on di.id = tdr.data_id
+        where tdr.task_id = #{id}
+    </select>
+
+</mapper>

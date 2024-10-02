@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdmap.task.mapper.TaskSetInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.hdmap.task.model.entity.TaskSetInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="SMALLINT"/>
+            <result property="status" column="status" jdbcType="SMALLINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
+            <result property="memo" column="memo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,type,
+        status,create_time,update_time,
+        create_by,update_by,memo
+    </sql>
+    <!-- 通过关联表查询 project_id -> 关联表（projects_task_sets_rel）-> task_set_id -> task_set_info(List) -->
+   <select id="selectByProjectId" resultType="com.hdmap.task.model.entity.TaskSetInfo">
+        select tsi.* from task_set_info tsi
+                             left join projects_task_sets_rel ptsr
+                                       on tsi.id = ptsr.task_set_id
+        where ptsr.project_id = #{id}
+    </select>
+
+    <!-- 通过关联表查询 project_id -> 关联表（projects_task_sets_rel）-> task_set_id -> task_set_info(List) -->
+    <!-- 通过createBy 过滤 task_set_info(List) -->
+    <select id="selectByProjectIdAndCreateBy" resultType="com.hdmap.task.model.entity.TaskSetInfo">
+        select tsi.* from task_set_info tsi
+                             left join projects_task_sets_rel ptsr
+                                       on tsi.id = ptsr.task_set_id
+        where ptsr.project_id = #{projectId}
+        and tsi.create_by = #{createBy}
+    </select>
+
+    <!-- 通过关联表查询 task_id -> 关联表（tasks_task_sets_rel）-> task_set_id -> task_set_info(List) -->
+    <select id="selectByTaskId" resultType="com.hdmap.task.model.entity.TaskSetInfo">
+        select tsi.* from task_set_info tsi
+                             left join tasks_task_sets_rel ttsr
+                                       on tsi.id = ttsr.task_set_id
+        where ttsr.task_id = #{id}
+    </select>
+
+    <!-- 通过关联表查询 project_id -> 关联表（projects_task_sets_rel）-> task_set_id -> task_set_info(List) -->
+    <select id="selectListByProjectId" resultType="com.hdmap.task.model.entity.TaskSetInfo" resultMap="BaseResultMap">
+        select tsi.* from task_set_info tsi
+                             left join projects_task_sets_rel ptsr
+                                       on tsi.id = ptsr.task_set_id
+        where ptsr.project_id = #{id}
+    </select>
+</mapper>
